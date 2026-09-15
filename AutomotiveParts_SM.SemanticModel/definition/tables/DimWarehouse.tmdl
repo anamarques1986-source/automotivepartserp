@@ -1,0 +1,86 @@
+table DimWarehouse
+	lineageTag: 256546bd-b9dd-4fcb-b034-4e4c95678f6e
+	sourceLineageTag: [dbo].[DimWarehouse]
+
+	column WarehouseKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: d80d3174-146a-4ac8-95fd-1ec0e7dfadb8
+		sourceLineageTag: WarehouseKey
+		summarizeBy: none
+		sourceColumn: WarehouseKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3fa885dc-1bff-4ac4-9665-72c735446ef2
+		sourceLineageTag: WarehouseCode
+		summarizeBy: none
+		sourceColumn: WarehouseCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseName
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 9fe21de6-e03c-46ff-b74f-36bd39253397
+		sourceLineageTag: WarehouseName
+		summarizeBy: none
+		sourceColumn: WarehouseName
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 5a6cbb1a-c014-4f8e-b247-bff13e62b1dd
+		sourceLineageTag: CountryCode
+		summarizeBy: none
+		sourceColumn: CountryCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3bf2a6ee-05e0-4d5b-9579-112cb0695390
+		sourceLineageTag: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column CapacityUnits
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: fbffc20a-6b32-422b-9c80-ad8c3435ca4c
+		sourceLineageTag: CapacityUnits
+		summarizeBy: none
+		sourceColumn: CapacityUnits
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActiveFlag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: c120866d-c2f8-4580-b719-84293cb81def
+		sourceLineageTag: ActiveFlag
+		summarizeBy: none
+		sourceColumn: ActiveFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimWarehouse = entity
+		mode: directLake
+		source
+			entityName: DimWarehouse
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

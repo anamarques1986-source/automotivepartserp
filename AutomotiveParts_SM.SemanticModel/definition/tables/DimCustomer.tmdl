@@ -1,0 +1,139 @@
+table DimCustomer
+	lineageTag: e9f5f585-73ca-4145-aead-98f900068a30
+	sourceLineageTag: [dbo].[DimCustomer]
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c4bb9c40-9b8a-4e57-853e-030ffd7c114c
+		sourceLineageTag: CustomerKey
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 77e4625d-8be9-4288-93db-1b2f858ccfa3
+		sourceLineageTag: CustomerCode
+		summarizeBy: none
+		sourceColumn: CustomerCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerName
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: a9e9a287-0519-40ad-b85f-11aac8ee6b63
+		sourceLineageTag: CustomerName
+		summarizeBy: none
+		sourceColumn: CustomerName
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 6cfe37b6-3be7-491b-b96f-3656dc2e5c1a
+		sourceLineageTag: CountryCode
+		summarizeBy: none
+		sourceColumn: CountryCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: ca8bc81c-8020-4aec-8818-6e60ef0fed38
+		sourceLineageTag: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerSegment
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: fb4ecc98-2c11-4aa8-a22c-8bd0ef805721
+		sourceLineageTag: CustomerSegment
+		summarizeBy: none
+		sourceColumn: CustomerSegment
+
+		annotation SummarizationSetBy = Automatic
+
+	column PriceTier
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: e6ea5578-8f71-4c1b-83e9-2596c6ac486f
+		sourceLineageTag: PriceTier
+		summarizeBy: none
+		sourceColumn: PriceTier
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrencyCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 13f52fde-771b-4830-857c-73759d211c95
+		sourceLineageTag: CurrencyCode
+		summarizeBy: none
+		sourceColumn: CurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentTermDays
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: 04836091-afd4-43e6-a26f-351b479e58c0
+		sourceLineageTag: PaymentTermDays
+		summarizeBy: sum
+		sourceColumn: PaymentTermDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreditLimit
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 3dd73d49-39bd-42ed-a965-f4fa62aba420
+		sourceLineageTag: CreditLimit
+		summarizeBy: sum
+		sourceColumn: CreditLimit
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ActiveFlag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: eb855ffb-fece-4644-a269-a2e23b044367
+		sourceLineageTag: ActiveFlag
+		summarizeBy: none
+		sourceColumn: ActiveFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreatedDate
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: e0bef24a-b664-4f6c-ba7b-d45ed96a4394
+		sourceLineageTag: CreatedDate
+		summarizeBy: none
+		sourceColumn: CreatedDate
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCustomer = entity
+		mode: directLake
+		source
+			entityName: DimCustomer
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

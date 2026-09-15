@@ -1,0 +1,199 @@
+table FactAccountsReceivable
+	lineageTag: 9036631b-439c-422a-b873-c5d07c96e0d3
+	sourceLineageTag: [dbo].[FactAccountsReceivable]
+
+	measure 'AR Outstanding' =
+			
+			SUM ( FactAccountsReceivable[OutstandingAmount] )
+		lineageTag: afcabbc4-cdba-4dcd-8d33-7eeb4f6f85d6
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Overdue AR' =
+			
+			CALCULATE (
+			    [AR Outstanding],
+			    FactAccountsReceivable[DaysPastDue] > 0
+			)
+		lineageTag: 1dd17136-d222-44cf-972f-734bdcdf4af6
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'AR Overdue %' =
+			
+			DIVIDE (
+			    [Overdue AR],
+			    [AR Outstanding]
+			)
+		lineageTag: cbe9ed9d-2d95-498d-b0c9-5eb76ab7d509
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AccountsReceivableKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 262aa84e-db80-4f2a-ad4e-0e631a8882a5
+		sourceLineageTag: AccountsReceivableKey
+		summarizeBy: count
+		sourceColumn: AccountsReceivableKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalesDocumentId
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 75259199-0c3d-4caf-af5b-5a2f0ee35458
+		sourceLineageTag: SalesDocumentId
+		summarizeBy: count
+		sourceColumn: SalesDocumentId
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentNumber
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 27304d9f-7b81-41f6-b888-844a620f8237
+		sourceLineageTag: DocumentNumber
+		summarizeBy: none
+		sourceColumn: DocumentNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 7e172f56-1797-41a6-baff-bd83be32ba1b
+		sourceLineageTag: CustomerKey
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentDateKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 25179f44-5e80-4842-8f7c-1e54ff8c4cdb
+		sourceLineageTag: DocumentDateKey
+		summarizeBy: none
+		sourceColumn: DocumentDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueDateKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: a6a8a8b0-720d-4a3e-ab16-b62b2e791d22
+		sourceLineageTag: DueDateKey
+		summarizeBy: count
+		sourceColumn: DueDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SnapshotDateKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: e62dc3ac-01da-47a4-aad4-ddd5fc58dac2
+		sourceLineageTag: SnapshotDateKey
+		summarizeBy: count
+		sourceColumn: SnapshotDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrencyCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 66af63e2-724b-4e19-8192-828ae13f7035
+		sourceLineageTag: CurrencyCode
+		summarizeBy: none
+		sourceColumn: CurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentAmount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 3f7d7c15-692b-4173-9c12-a11df691f562
+		sourceLineageTag: DocumentAmount
+		summarizeBy: sum
+		sourceColumn: DocumentAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OutstandingAmount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 17dc702c-a1df-46b2-a50a-be353867dfbb
+		sourceLineageTag: OutstandingAmount
+		summarizeBy: sum
+		sourceColumn: OutstandingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OutstandingPct
+		dataType: double
+		sourceProviderType: decimal(25, 2)
+		lineageTag: 3ec6d500-9641-4c57-a6ac-95560c05acda
+		sourceLineageTag: OutstandingPct
+		summarizeBy: sum
+		sourceColumn: OutstandingPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: de0e8571-b4d1-4f3c-9bc5-142cb960418a
+		sourceLineageTag: Status
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaysPastDue
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: ee23e8ee-8a03-41f7-9580-7ea9de4dc1fb
+		sourceLineageTag: DaysPastDue
+		summarizeBy: sum
+		sourceColumn: DaysPastDue
+
+		annotation SummarizationSetBy = Automatic
+
+	column AgingBucket
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: f44de6ae-b1f1-4e05-90b8-ec9cdf3d3d5c
+		sourceLineageTag: AgingBucket
+		summarizeBy: none
+		sourceColumn: AgingBucket
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactAccountsReceivable = entity
+		mode: directLake
+		source
+			entityName: FactAccountsReceivable
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

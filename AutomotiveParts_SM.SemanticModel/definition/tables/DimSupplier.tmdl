@@ -1,0 +1,118 @@
+table DimSupplier
+	lineageTag: 95dcb7df-f98b-4925-a7f4-ddd3fe042256
+	sourceLineageTag: [dbo].[DimSupplier]
+
+	column SupplierKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 0280f03b-d3c5-4f13-bd86-1ca6e704c857
+		sourceLineageTag: SupplierKey
+		summarizeBy: none
+		sourceColumn: SupplierKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: b05b8d58-ca5b-46e5-93de-5528b8c925dd
+		sourceLineageTag: SupplierCode
+		summarizeBy: none
+		sourceColumn: SupplierCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierName
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 80a72d4e-dbfe-4047-a733-a7cce5b308f4
+		sourceLineageTag: SupplierName
+		summarizeBy: none
+		sourceColumn: SupplierName
+
+		annotation SummarizationSetBy = Automatic
+
+	column CountryCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 3c36976f-d0e8-4233-8644-c94ea1d15c5a
+		sourceLineageTag: CountryCode
+		summarizeBy: none
+		sourceColumn: CountryCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 5123c7f7-06e3-42f8-b490-13536922a016
+		sourceLineageTag: City
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrencyCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 56cb0e8a-7969-4b7f-bbe8-9b7758092448
+		sourceLineageTag: CurrencyCode
+		summarizeBy: none
+		sourceColumn: CurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column PaymentTermDays
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: c9be6b0e-b937-4d29-a0af-d6831e6eded0
+		sourceLineageTag: PaymentTermDays
+		summarizeBy: none
+		sourceColumn: PaymentTermDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column DefaultLeadTimeDays
+		dataType: int64
+		formatString: 0
+		sourceProviderType: smallint
+		lineageTag: 338fe7e4-22f5-4103-aaf7-3c0eed3d4939
+		sourceLineageTag: DefaultLeadTimeDays
+		summarizeBy: none
+		sourceColumn: DefaultLeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActiveFlag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		sourceProviderType: bit
+		lineageTag: 315c003a-b458-4d8a-b4c6-f061621be7eb
+		sourceLineageTag: ActiveFlag
+		summarizeBy: none
+		sourceColumn: ActiveFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreatedDate
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: date
+		lineageTag: cde016ab-6a68-44ec-9a02-4287f00be338
+		sourceLineageTag: CreatedDate
+		summarizeBy: none
+		sourceColumn: CreatedDate
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimSupplier = entity
+		mode: directLake
+		source
+			entityName: DimSupplier
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+

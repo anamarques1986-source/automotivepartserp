@@ -1,0 +1,176 @@
+table FactAccountsPayable
+	lineageTag: 69f21313-35c1-42df-bd16-51f08f8060ef
+	sourceLineageTag: [dbo].[FactAccountsPayable]
+
+	measure 'AP Outstanding' =
+			
+			SUM ( FactAccountsPayable[OutstandingAmount] )
+		lineageTag: 234a363f-48d3-41a3-8492-fd1b0dfcaeee
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Overdue AP' =
+			
+			CALCULATE (
+			    [AP Outstanding],
+			    FactAccountsPayable[DaysPastDue] > 0
+			)
+		lineageTag: 80941521-bf66-4f50-9200-efeef5635c0a
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AccountsPayableKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: b4cd26c7-e998-4cb7-a117-e070552f2d9b
+		sourceLineageTag: AccountsPayableKey
+		summarizeBy: count
+		sourceColumn: AccountsPayableKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 4d545950-1634-4bde-85ac-7c8fd69c692f
+		sourceLineageTag: SupplierKey
+		summarizeBy: none
+		sourceColumn: SupplierKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SupplierInvoiceNumber
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 4d91586b-4f8d-41ab-8826-9a734a1cbd93
+		sourceLineageTag: SupplierInvoiceNumber
+		summarizeBy: none
+		sourceColumn: SupplierInvoiceNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentDateKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 63f7c327-7012-4117-b1c4-3781f0445a84
+		sourceLineageTag: DocumentDateKey
+		summarizeBy: none
+		sourceColumn: DocumentDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueDateKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: 07a24387-2845-4c92-ad2f-975b2bf860cc
+		sourceLineageTag: DueDateKey
+		summarizeBy: count
+		sourceColumn: DueDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SnapshotDateKey
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: cef00ceb-4179-4d45-b6b1-856509c6a900
+		sourceLineageTag: SnapshotDateKey
+		summarizeBy: count
+		sourceColumn: SnapshotDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrencyCode
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: dce2dfd4-9e95-40e5-a9a9-f29af6ca1952
+		sourceLineageTag: CurrencyCode
+		summarizeBy: none
+		sourceColumn: CurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentAmount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: 62361820-6594-43f9-ad29-ce7e81a800a7
+		sourceLineageTag: DocumentAmount
+		summarizeBy: sum
+		sourceColumn: DocumentAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OutstandingAmount
+		dataType: double
+		sourceProviderType: decimal(18, 2)
+		lineageTag: cb614a85-aa17-46cf-b54c-71cb749f070f
+		sourceLineageTag: OutstandingAmount
+		summarizeBy: sum
+		sourceColumn: OutstandingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OutstandingPct
+		dataType: double
+		sourceProviderType: decimal(25, 2)
+		lineageTag: 3ff992ad-1118-4a44-97a9-5ea255157844
+		sourceLineageTag: OutstandingPct
+		summarizeBy: sum
+		sourceColumn: OutstandingPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Status
+		dataType: string
+		sourceProviderType: varchar(8000)
+		lineageTag: 31d40661-2a7b-4ca8-8ee1-030ce24d2b5e
+		sourceLineageTag: Status
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaysPastDue
+		dataType: int64
+		formatString: 0
+		sourceProviderType: int
+		lineageTag: c0d044aa-1a54-47a5-9324-138c0989b14c
+		sourceLineageTag: DaysPastDue
+		summarizeBy: sum
+		sourceColumn: DaysPastDue
+
+		annotation SummarizationSetBy = Automatic
+
+	column AgingBucket
+		dataType: string
+		sourceProviderType: varchar(10)
+		lineageTag: 03beb397-4c6f-4300-a861-8a9b14f99541
+		sourceLineageTag: AgingBucket
+		summarizeBy: none
+		sourceColumn: AgingBucket
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactAccountsPayable = entity
+		mode: directLake
+		source
+			entityName: FactAccountsPayable
+			schemaName: dbo
+			expressionSource: DatabaseQuery
+
+	annotation PBI_ResultType = Table
+
