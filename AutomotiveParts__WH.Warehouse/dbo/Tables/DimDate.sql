@@ -4,11 +4,12 @@ CREATE TABLE [dbo].[DimDate] (
     [Year]            INT          NULL,
     [QuarterNumber]   INT          NULL,
     [MonthNumber]     INT          NULL,
-    [MonthName]       VARCHAR (20) NULL,
+    [MonthName]       VARCHAR (3)  NULL,
     [DayOfMonth]      INT          NULL,
+    [YearMonthKey]    INT          NULL,
+    [YearMonth]       VARCHAR (10) NULL,
     [DayOfWeekNumber] INT          NULL,
-    [DayOfWeekName]   VARCHAR (20) NULL,
-    [YearMonthKey]    INT          NULL
+    [DayOfWeekName]   VARCHAR (20) NULL
 );
 
 

@@ -1,0 +1,394 @@
+table FactSales
+	lineageTag: d1d45732-6e8d-42d2-a193-a803aa829ca2
+	sourceLineageTag: [dbo].[FactSales]
+
+	measure Revenue =
+			
+			SUM ( FactSales[NetAmount] )
+		lineageTag: ce53b958-ed76-47bf-b002-dd9abb2dcef6
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Cost =
+			
+			SUM ( FactSales[CostAmount] )
+		lineageTag: a2398221-57f6-4e74-bba4-17fec4d5247c
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gross Margin' =
+			
+			SUM ( FactSales[GrossMarginAmount] )
+		lineageTag: 22a17363-b383-4960-bbed-544f3d083374
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gross Margin %' =
+			
+			DIVIDE (
+			    [Gross Margin],
+			    [Revenue]
+			)
+		lineageTag: b2cba44f-325f-4c02-81df-fccc4d80cb48
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Sales Quantity' =
+			
+			SUM ( FactSales[Quantity] )
+		lineageTag: 4915b641-f154-4a39-9431-c9a4d6fe38f2
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure Orders =
+			
+			DISTINCTCOUNT ( FactSales[SalesDocumentId] )
+		formatString: 0
+		lineageTag: 7c907b25-f31b-40ae-80d1-d30939a469fa
+
+		changedProperty = Name
+
+	measure 'Average Order Value' =
+			
+			DIVIDE (
+			    [Revenue],
+			    [Orders]
+			)
+		lineageTag: 2b70ec6e-9cd5-4ccd-b2a6-c725189676b6
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Average Selling Price' =
+			
+			DIVIDE (
+			    [Revenue],
+			    [Sales Quantity]
+			)
+		lineageTag: 52ae0bf4-bcc9-4369-a515-47ccd2b7dfcf
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Active Customers' =
+			
+			DISTINCTCOUNT ( FactSales[CustomerKey] )
+		formatString: 0
+		lineageTag: 2eab775c-0aef-4909-8f4d-d539bd010934
+
+		changedProperty = Name
+
+	measure 'Revenue YTD' =
+			
+			TOTALYTD (
+			    [Revenue],
+			    DimDate[DateValue]
+			)
+		lineageTag: d78d9e80-171d-499a-88b0-5c29b2cd8267
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Revenue PY' =
+			
+			CALCULATE (
+			    [Revenue],
+			    SAMEPERIODLASTYEAR ( DimDate[DateValue] )
+			)
+		lineageTag: d5dce119-dba9-40af-bdb8-6b3187fefc9c
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Revenue YoY %' =
+			
+			DIVIDE (
+			    [Revenue] - [Revenue PY],
+			    [Revenue PY]
+			)
+		lineageTag: 893e4514-2173-4f05-97d3-745a16d337a3
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SalesKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 4a9cafc3-8aa4-4c64-b85f-4562ab0f795d
+		sourceLineageTag: SalesKey
+		summarizeBy: none
+		sourceColumn: SalesKey
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+	column SalesDocumentId
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e987fd6-2840-4db8-8184-94f306bfa35a
+		sourceLineageTag: SalesDocumentId
+		summarizeBy: none
+		sourceColumn: SalesDocumentId
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+	column DocumentNumber
+		dataType: string
+		lineageTag: 98a03c2e-563a-4f62-ad49-3da142643403
+		sourceLineageTag: DocumentNumber
+		summarizeBy: none
+		sourceColumn: DocumentNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentType
+		dataType: string
+		lineageTag: 030a880e-34e8-4536-88da-48d1087f45cf
+		sourceLineageTag: DocumentType
+		summarizeBy: none
+		sourceColumn: DocumentType
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: ed818fa2-b389-4a99-a88e-13e4b7f18afb
+		sourceLineageTag: DocumentDateKey
+		summarizeBy: none
+		sourceColumn: DocumentDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e5bb0cb-6f60-4890-9499-3e37b04fed46
+		sourceLineageTag: DueDateKey
+		summarizeBy: count
+		sourceColumn: DueDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: f52c9517-8e31-4630-9e21-6fd91698c196
+		sourceLineageTag: CustomerKey
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 5cde7ca9-30ec-4d3c-a0fe-a024c46950d5
+		sourceLineageTag: ProductKey
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarehouseKey
+		dataType: int64
+		formatString: 0
+		lineageTag: d31a3700-aae0-4f83-ad6c-6417d962fc1b
+		sourceLineageTag: WarehouseKey
+		summarizeBy: none
+		sourceColumn: WarehouseKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 6d3c32f4-2e49-4188-9acd-6967d747f0a0
+		sourceLineageTag: SalespersonKey
+		summarizeBy: none
+		sourceColumn: SalespersonKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column LineNumber
+		dataType: int64
+		formatString: 0
+		lineageTag: 742424a5-f37c-40b5-81ec-0d9d7fed50df
+		sourceLineageTag: LineNumber
+		summarizeBy: none
+		sourceColumn: LineNumber
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+	column Quantity
+		dataType: double
+		lineageTag: 898e5dd3-4cac-44dc-95cb-532ccf1cc529
+		sourceLineageTag: Quantity
+		summarizeBy: none
+		sourceColumn: Quantity
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnitPrice
+		dataType: double
+		lineageTag: 5131ff97-8906-4db6-a6b1-6c60b9d9223a
+		sourceLineageTag: UnitPrice
+		summarizeBy: none
+		sourceColumn: UnitPrice
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DiscountPct
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: fa7b4f9a-68dc-4a13-8b6f-ce04442444d5
+		sourceLineageTag: DiscountPct
+		summarizeBy: none
+		sourceColumn: DiscountPct
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt"}
+
+	column NetAmount
+		dataType: double
+		lineageTag: d7c7b89a-5a63-4b99-8deb-f9f2f7c60e62
+		sourceLineageTag: NetAmount
+		summarizeBy: none
+		sourceColumn: NetAmount
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TaxRate
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 9f60aef2-8da5-44ba-9701-b3e11223a69a
+		sourceLineageTag: TaxRate
+		summarizeBy: none
+		sourceColumn: TaxRate
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt"}
+
+	column TaxAmount
+		dataType: double
+		lineageTag: da5b670b-ec77-469c-aea1-ab9ae0683eea
+		sourceLineageTag: TaxAmount
+		summarizeBy: none
+		sourceColumn: TaxAmount
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossAmount
+		dataType: double
+		lineageTag: 1343cf0b-99c0-455e-b440-0ee53af16ef5
+		sourceLineageTag: GrossAmount
+		summarizeBy: none
+		sourceColumn: GrossAmount
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column UnitCost
+		dataType: double
+		lineageTag: 40a17ccd-7929-46e6-991b-ac070e418daf
+		sourceLineageTag: UnitCost
+		summarizeBy: none
+		sourceColumn: UnitCost
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column CostAmount
+		dataType: double
+		lineageTag: 4f8e80cc-6389-4a51-b9c1-35df57cb6f7c
+		sourceLineageTag: CostAmount
+		summarizeBy: none
+		sourceColumn: CostAmount
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossMarginAmount
+		dataType: double
+		lineageTag: bf11be46-c659-490a-92a7-f4194b5bc951
+		sourceLineageTag: GrossMarginAmount
+		summarizeBy: none
+		sourceColumn: GrossMarginAmount
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GrossMarginPct
+		dataType: double
+		lineageTag: 12b02814-c7cd-4902-955c-e47d7f635bff
+		sourceLineageTag: GrossMarginPct
+		summarizeBy: none
+		sourceColumn: GrossMarginPct
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FactSales = entity
+		mode: directLake
+		source
+			entityName: FactSales
+			schemaName: dbo
+			expressionSource: 'DirectLake - AutomotiveParts__WH'
+

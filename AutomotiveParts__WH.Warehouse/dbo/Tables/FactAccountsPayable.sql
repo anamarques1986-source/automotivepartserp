@@ -11,7 +11,8 @@ CREATE TABLE [dbo].[FactAccountsPayable] (
     [OutstandingPct]        DECIMAL (25, 2) NULL,
     [Status]                VARCHAR (8000)  NULL,
     [DaysPastDue]           INT             NULL,
-    [AgingBucket]           VARCHAR (10)    NOT NULL
+    [AgingBucket]           VARCHAR (10)    NOT NULL,
+    [AgingBucketSort]       INT             NULL
 );
 
 
