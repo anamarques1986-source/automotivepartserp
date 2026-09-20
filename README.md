@@ -1,6 +1,4 @@
-
-![Architecture](docs/architecture.png)
-
+![Automotive Parts ERP Architecture](automotivepartserp/docs/architecture.png)
 
 
 
