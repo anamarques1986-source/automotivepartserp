@@ -1,0 +1,120 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "Fluent2-CY26SU09",
+      "reportVersionAtImport": {
+        "visual": "2.13.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    },
+    "customTheme": {
+      "name": "Automotive_Parts_Analytics_-_P562621216733504.json",
+      "reportVersionAtImport": {
+        "visual": "2.11.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "14343316954452189.png",
+          "path": "14343316954452189.png",
+          "type": "Image"
+        },
+        {
+          "name": "234992314532240154.png",
+          "path": "234992314532240154.png",
+          "type": "Image"
+        },
+        {
+          "name": "345606001271336327.png",
+          "path": "345606001271336327.png",
+          "type": "Image"
+        },
+        {
+          "name": "434977621386339863.png",
+          "path": "434977621386339863.png",
+          "type": "Image"
+        },
+        {
+          "name": "Automotive_Parts_Analytics_-_P562621216733504.json",
+          "path": "Automotive_Parts_Analytics_-_P562621216733504.json",
+          "type": "Image"
+        },
+        {
+          "name": "avg5717772736159684.png",
+          "path": "avg5717772736159684.png",
+          "type": "Image"
+        },
+        {
+          "name": "avg6294210361568751.png",
+          "path": "avg6294210361568751.png",
+          "type": "Image"
+        },
+        {
+          "name": "cost34807644851528696.png",
+          "path": "cost34807644851528696.png",
+          "type": "Image"
+        },
+        {
+          "name": "customer_overdue563471675902208.png",
+          "path": "customer_overdue563471675902208.png",
+          "type": "Image"
+        },
+        {
+          "name": "de36cc79-1a65-4999-b430-ff82213881222468774034.png",
+          "path": "de36cc79-1a65-4999-b430-ff82213881222468774034.png",
+          "type": "Image"
+        },
+        {
+          "name": "sales_qt9647949633431046.png",
+          "path": "sales_qt9647949633431046.png",
+          "type": "Image"
+        }
+      ]
+    },
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "Fluent2-CY26SU09",
+          "path": "BaseThemes/Fluent2-CY26SU09.json",
+          "type": "BaseTheme"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}
