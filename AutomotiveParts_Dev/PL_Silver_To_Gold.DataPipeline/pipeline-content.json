@@ -1,0 +1,854 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Script",
+        "typeProperties": {
+          "scripts": [
+            {
+              "text": {
+                "value": "TRUNCATE TABLE stg.Customers;\nTRUNCATE TABLE stg.Products;\nTRUNCATE TABLE stg.Suppliers;\nTRUNCATE TABLE stg.Warehouses;\nTRUNCATE TABLE stg.Salespersons;\nTRUNCATE TABLE stg.Sales;\nTRUNCATE TABLE stg.AccountsReceivable;\nTRUNCATE TABLE stg.AccountsPayable;\nTRUNCATE TABLE stg.ProductPriceList;\nTRUNCATE TABLE stg.ProductSupplier;",
+                "type": "Expression"
+              },
+              "type": "Query"
+            }
+          ],
+          "scriptBlockExecutionTimeout": "02:00:00"
+        },
+        "linkedService": {
+          "name": "AutomotiveParts__WH",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+              "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "SCR_Truncate_Staging",
+        "dependsOn": []
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "customers"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "Customers"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_Customers",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "suppliers"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "Suppliers"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_Suplliers",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "warehouses"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "Warehouses"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_Warehouses",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "salespersons"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "Salespersons"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_Salesperson",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "sales"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "Sales"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_Sales",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "accountsreceivable"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "AccountsReceivable"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_AccountsReceivable",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "accountspayable"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "AccountsPayable"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_AccountsPayable",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "products"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "Products"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_Products",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "productpricelist"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "tableOption": "autoCreate",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "ProductPriceList"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_ProductPriceList",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Copy",
+        "typeProperties": {
+          "source": {
+            "type": "LakehouseTableSource",
+            "datasetSettings": {
+              "type": "LakehouseTable",
+              "typeProperties": {
+                "schema": "silver",
+                "table": "productsupplier"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts_Bronze_LH",
+                "properties": {
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000",
+                    "rootFolder": "Tables"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "sink": {
+            "type": "DataWarehouseSink",
+            "tableOption": "autoCreate",
+            "allowCopyCommand": true,
+            "copyCommandSettings": {},
+            "writeBehavior": "Insert",
+            "datasetSettings": {
+              "type": "DataWarehouseTable",
+              "typeProperties": {
+                "schema": "stg",
+                "table": "ProductSupplier"
+              },
+              "schema": [],
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "annotations": []
+            }
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          },
+          "enableStaging": true
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "CP_ProductSupplier",
+        "dependsOn": [
+          {
+            "activity": "SCR_Truncate_Staging",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

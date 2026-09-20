@@ -1,0 +1,229 @@
+table FactAccountsReceivable
+	lineageTag: 8e1c0c40-f365-4019-b590-96f5d4e97151
+	sourceLineageTag: [dbo].[FactAccountsReceivable]
+
+	measure 'AR Outstanding' =
+			
+			SUM (
+			    FactAccountsReceivable[OutstandingAmount]
+			)
+		lineageTag: 41995120-ca8f-4c28-8110-4e2c3f62a4c2
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Overdue AR' =
+			
+			CALCULATE (
+			    [AR Outstanding],
+			    FactAccountsReceivable[DaysPastDue] > 0
+			)
+		lineageTag: 6a0ee3ae-20f3-48dc-a384-a5e8382ddce3
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'AR Overdue %' =
+			
+			DIVIDE (
+			    [Overdue AR],
+			    [AR Outstanding]
+			)
+		lineageTag: 4a69d7d3-f01b-44d4-867e-f77c5cfb73eb
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customers Overdue' =
+			
+			CALCULATE (
+			    DISTINCTCOUNT (
+			        FactAccountsReceivable[CustomerKey]
+			    ),
+			    FactAccountsReceivable[DaysPastDue] > 0
+			)
+		formatString: 0
+		lineageTag: fbd07a86-eb80-4a3d-b1bb-5541d020a8c3
+
+		changedProperty = Name
+
+	measure 'Avg Outstanding / Customer' =
+			
+			DIVIDE (
+			    [AR Outstanding],
+			    DISTINCTCOUNT (
+			        FactAccountsReceivable[CustomerKey]
+			    )
+			)
+		lineageTag: 25302c5c-fbee-4001-83f9-95f3d0760525
+
+		changedProperty = Name
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AccountsReceivableKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 5b64f41e-e02d-4fa7-b362-8d5c2802284e
+		sourceLineageTag: AccountsReceivableKey
+		summarizeBy: none
+		sourceColumn: AccountsReceivableKey
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+	column SalesDocumentId
+		dataType: int64
+		formatString: 0
+		lineageTag: c00df8da-f359-47d4-b0ac-f45d8ba6e2a2
+		sourceLineageTag: SalesDocumentId
+		summarizeBy: count
+		sourceColumn: SalesDocumentId
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentNumber
+		dataType: string
+		lineageTag: 331a9a38-99f7-4b5a-a726-0e7f645e9bd7
+		sourceLineageTag: DocumentNumber
+		summarizeBy: none
+		sourceColumn: DocumentNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 81336470-ac74-4274-8b84-f6a4eb7c61c7
+		sourceLineageTag: CustomerKey
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 9da67b14-99cb-49e0-8dba-b365cf9e22ac
+		sourceLineageTag: DocumentDateKey
+		summarizeBy: none
+		sourceColumn: DocumentDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DueDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 220759d6-3a87-420c-a63e-0ba9f1968748
+		sourceLineageTag: DueDateKey
+		summarizeBy: count
+		sourceColumn: DueDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SnapshotDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: f0d4ba83-0d54-435f-acce-6e66f3d5c1d2
+		sourceLineageTag: SnapshotDateKey
+		summarizeBy: count
+		sourceColumn: SnapshotDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CurrencyCode
+		dataType: string
+		lineageTag: 141a73bd-3c3b-4773-a43c-c086578febba
+		sourceLineageTag: CurrencyCode
+		summarizeBy: none
+		sourceColumn: CurrencyCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column DocumentAmount
+		dataType: double
+		lineageTag: 4a77f782-306e-4c31-9dfc-d72a283b67d1
+		sourceLineageTag: DocumentAmount
+		summarizeBy: sum
+		sourceColumn: DocumentAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OutstandingAmount
+		dataType: double
+		lineageTag: 0a0d7fc8-75d1-4f57-9c0b-2d9ac2ecbf91
+		sourceLineageTag: OutstandingAmount
+		summarizeBy: sum
+		sourceColumn: OutstandingAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OutstandingPct
+		dataType: double
+		lineageTag: 39036ac3-27d4-4a28-b86c-cb5e099c00db
+		sourceLineageTag: OutstandingPct
+		summarizeBy: sum
+		sourceColumn: OutstandingPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Status
+		dataType: string
+		lineageTag: 31647bc4-9c78-4725-be5a-f31cd11e605e
+		sourceLineageTag: Status
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column DaysPastDue
+		dataType: int64
+		formatString: 0
+		lineageTag: 77c2e4b6-e4e5-4916-b868-40f7c35d6d7a
+		sourceLineageTag: DaysPastDue
+		summarizeBy: sum
+		sourceColumn: DaysPastDue
+
+		annotation SummarizationSetBy = Automatic
+
+	column AgingBucket
+		dataType: string
+		lineageTag: 6a6fe5a2-24e4-48b3-8343-a3d6299a5cc3
+		sourceLineageTag: AgingBucket
+		summarizeBy: none
+		sourceColumn: AgingBucket
+		sortByColumn: AgingBucketSort
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column AgingBucketSort
+		dataType: int64
+		formatString: 0
+		lineageTag: e4cc4e12-6c51-497f-b6b1-6240276030b3
+		sourceLineageTag: AgingBucketSort
+		summarizeBy: none
+		sourceColumn: AgingBucketSort
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+	partition FactAccountsReceivable = entity
+		mode: directLake
+		source
+			entityName: FactAccountsReceivable
+			schemaName: dbo
+			expressionSource: 'DirectLake - AutomotiveParts__WH'
+
