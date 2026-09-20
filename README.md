@@ -13,8 +13,6 @@ The project demonstrates a complete analytics workflow using Microsoft Fabric, f
 
 ## Architecture
 
-![Automotive Parts ERP Architecture](docs/architecture.png)
-
 The platform follows a Medallion-style architecture:
 
 **SQL Server → Bronze → Silver → Gold/Warehouse → Direct Lake → Power BI**
@@ -96,13 +94,16 @@ Dimensional Model
 The analytical model includes dimensions, facts and relationship tables.
 
 Dimensions
+
 DimCustomer
 DimDate
 DimProduct
 DimSalesperson
 DimSupplier
 DimWarehouse
+
 Facts
+
 FactSales
 FactAccountsReceivable
 FactAccountsPayable
@@ -242,24 +243,10 @@ Git integration
 Deployment Pipelines
 DEV / TEST / PROD environment separation
 End-to-end analytics engineering
-Screenshots
 
+Screenshots
 Additional project screenshots can be added under the docs directory.
 
-Suggested documentation:
-
-docs/
-├── architecture.png
-├── deployment-pipeline.png
-├── fabric-lineage.png
-├── semantic-model.png
-└── powerbi-report.png
-Deployment Pipeline
-<!-- ![Deployment Pipeline](docs/deployment-pipeline.png) -->
-Semantic Model
-<!-- ![Semantic Model](docs/semantic-model.png) -->
-Power BI Report
-<!-- ![Power BI Report](docs/powerbi-report.png) -->
 Roadmap
 
 Completed:
