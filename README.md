@@ -32,3 +32,4 @@ Fabric Warehouse
 Direct Lake Semantic Model
         ↓
 Power BI Report
+
