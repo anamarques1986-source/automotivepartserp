@@ -78,7 +78,7 @@ Main notebooks:
 NB01_Silver_Sales
 NB02_Silver_Commercial
 
-## Gold Layer
+#### Gold Layer
 
 The Gold layer is implemented in **Microsoft Fabric Warehouse** and contains the curated, analytics-ready dimensional model.
 
