@@ -11,10 +11,6 @@ The project demonstrates a complete analytics workflow, from operational data in
 
 ---
 
-## Architecture
-
-![Automotive Parts ERP Architecture](docs/architecture.png)
-
 ### End-to-End Data Flow
 
 ```text
