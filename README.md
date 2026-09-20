@@ -1,3 +1,10 @@
+
+![Architecture](docs/architecture.png)
+
+
+
+
+
 # Automotive Parts ERP Analytics Platform
 
 End-to-end Microsoft Fabric analytics solution simulating the modernization of a legacy automotive-parts ERP.
