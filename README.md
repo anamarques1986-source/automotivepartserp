@@ -78,7 +78,25 @@ Main notebooks:
 NB01_Silver_Sales
 NB02_Silver_Commercial
 
-Gold Layer
+## Gold Layer
+
+The Gold layer is implemented in **Microsoft Fabric Warehouse** and contains the curated, analytics-ready dimensional model.
+
+Data from the Silver layer is first loaded into staging tables and then transformed into business-ready dimension and fact tables.
+
+### Processing flow
+
+```text
+Silver Delta Tables
+        ↓
+Warehouse STG
+        ↓
+T-SQL transformations
+        ↓
+Gold / dbo
+        ↓
+Direct Lake Semantic Model
+
 
 Curated Silver data is loaded into a Fabric Warehouse.
 
@@ -306,6 +324,14 @@ Status
 ErrorMessage
 
 This would provide operational monitoring of the platform.
+
+
+
+
+
+
+
+
 
 Data Privacy
 
