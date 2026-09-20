@@ -1,0 +1,138 @@
+table DimProduct
+	lineageTag: bbf10b25-6b92-4fa9-8d48-3fac3b2d5663
+	sourceLineageTag: [dbo].[DimProduct]
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 097e54fd-abe8-4711-af63-79c2f0d69171
+		sourceLineageTag: ProductKey
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductCode
+		dataType: string
+		lineageTag: 64097a52-7dc2-481c-89e5-fd8b1e10c1a0
+		sourceLineageTag: ProductCode
+		summarizeBy: none
+		sourceColumn: ProductCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 4169c6ab-6e6f-49eb-9a13-e4a2b4f2615b
+		sourceLineageTag: ProductName
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 3b418935-1859-4a4f-ad66-b222f3613f99
+		sourceLineageTag: Category
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategory
+		dataType: string
+		lineageTag: 68c03b36-3720-4670-bf37-20919e762f83
+		sourceLineageTag: Subcategory
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Brand
+		dataType: string
+		lineageTag: c5a64fa0-02f9-477d-83d9-89af45fd229f
+		sourceLineageTag: Brand
+		summarizeBy: none
+		sourceColumn: Brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column VehicleSegment
+		dataType: string
+		lineageTag: 2f96a760-c635-43c5-aece-bd35800da434
+		sourceLineageTag: VehicleSegment
+		summarizeBy: none
+		sourceColumn: VehicleSegment
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: a5187eac-c4c4-4973-ab8d-fc791bc72475
+		sourceLineageTag: UnitOfMeasure
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column StandardCost
+		dataType: double
+		lineageTag: fcdadba9-11da-4280-9b1d-c4739186cb89
+		sourceLineageTag: StandardCost
+		summarizeBy: sum
+		sourceColumn: StandardCost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ListPrice
+		dataType: double
+		lineageTag: 4341a537-87c4-4bb2-b1da-76be77d66ba2
+		sourceLineageTag: ListPrice
+		summarizeBy: sum
+		sourceColumn: ListPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column WeightKg
+		dataType: decimal
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 275897ce-ed2b-464a-878c-d6b834bfe049
+		sourceLineageTag: WeightKg
+		summarizeBy: sum
+		sourceColumn: WeightKg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt"}
+
+	column ActiveFlag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2e6bdf65-250b-4125-b10f-01cdac67da45
+		sourceLineageTag: ActiveFlag
+		summarizeBy: none
+		sourceColumn: ActiveFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	column CreatedDate
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 6cd33c64-9258-479d-a5bd-bbcc75e26920
+		sourceLineageTag: CreatedDate
+		summarizeBy: none
+		sourceColumn: CreatedDate
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimProduct = entity
+		mode: directLake
+		source
+			entityName: DimProduct
+			schemaName: dbo
+			expressionSource: 'DirectLake - AutomotiveParts__WH'
+
