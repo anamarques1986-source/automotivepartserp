@@ -1,0 +1,58 @@
+table DimSalesperson
+	lineageTag: 158e2850-3a54-448d-9eda-b73a3e494e6c
+	sourceLineageTag: [dbo].[DimSalesperson]
+
+	column SalespersonKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 3700c90b-5287-41bd-880e-e0944c0fd7e7
+		sourceLineageTag: SalespersonKey
+		summarizeBy: none
+		sourceColumn: SalespersonKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonCode
+		dataType: string
+		lineageTag: 8c32244c-51a5-4adf-ba3d-83fd3aa31321
+		sourceLineageTag: SalespersonCode
+		summarizeBy: none
+		sourceColumn: SalespersonCode
+
+		annotation SummarizationSetBy = Automatic
+
+	column SalespersonName
+		dataType: string
+		lineageTag: e8fddace-22e4-4333-b744-a9818dadfda1
+		sourceLineageTag: SalespersonName
+		summarizeBy: none
+		sourceColumn: SalespersonName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: c55e37bc-64ac-42d1-ad98-cf644396c7b2
+		sourceLineageTag: Region
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column ActiveFlag
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 3895ad70-09dd-4b4f-acdc-387e82cccf5a
+		sourceLineageTag: ActiveFlag
+		summarizeBy: none
+		sourceColumn: ActiveFlag
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimSalesperson = entity
+		mode: directLake
+		source
+			entityName: DimSalesperson
+			schemaName: dbo
+			expressionSource: 'DirectLake - AutomotiveParts__WH'
+
