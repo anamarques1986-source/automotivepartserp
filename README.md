@@ -39,7 +39,7 @@ Power BI
 The platform follows a Medallion-style architecture:
 
 SQL Server → Bronze → Silver → Gold / Warehouse → Direct Lake → Power BI
-
+```text
 Business Scenario
 
 The project simulates the analytics modernization of an automotive-parts company operating a traditional ERP environment.
