@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Warehouse",
+    "displayName": "AutomotiveParts__WH"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d"
+  }
+}
