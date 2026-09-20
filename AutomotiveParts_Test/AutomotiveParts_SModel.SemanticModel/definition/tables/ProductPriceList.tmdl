@@ -1,0 +1,124 @@
+table ProductPriceList
+	lineageTag: 4f9af6bb-b474-4d2e-9dae-63d3531e5dc3
+	sourceLineageTag: [dbo].[ProductPriceList]
+
+	column PriceListId
+		dataType: int64
+		formatString: 0
+		lineageTag: dfcde333-fee8-4d7c-83f9-40bb97daee62
+		sourceLineageTag: PriceListId
+		summarizeBy: none
+		sourceColumn: PriceListId
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+	column ProductId
+		dataType: int64
+		formatString: 0
+		lineageTag: fd1c7d6f-277e-4838-9f24-1f5e4174d4a2
+		sourceLineageTag: ProductId
+		summarizeBy: none
+		sourceColumn: ProductId
+
+		annotation SummarizationSetBy = Automatic
+
+	column PriceTier
+		dataType: string
+		lineageTag: 41793da1-cef7-423e-9ef2-682089497299
+		sourceLineageTag: PriceTier
+		summarizeBy: none
+		sourceColumn: PriceTier
+
+		annotation SummarizationSetBy = Automatic
+
+	column EffectiveFrom
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 044eebcd-52ba-4c81-a640-051fb11cf3a8
+		sourceLineageTag: EffectiveFrom
+		summarizeBy: none
+		sourceColumn: EffectiveFrom
+
+		annotation SummarizationSetBy = Automatic
+
+	column EffectiveTo
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 4cbaa239-7152-41a9-a19d-2393e22b9d2f
+		sourceLineageTag: EffectiveTo
+		summarizeBy: none
+		sourceColumn: EffectiveTo
+
+		annotation SummarizationSetBy = Automatic
+
+	column ListPrice
+		dataType: double
+		lineageTag: a18fd93f-5cda-4761-a937-85c6d76a67af
+		sourceLineageTag: ListPrice
+		summarizeBy: none
+		sourceColumn: ListPrice
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MinimumAllowedPrice
+		dataType: double
+		lineageTag: 19e2da98-a7c7-4342-9a94-6494123f4480
+		sourceLineageTag: MinimumAllowedPrice
+		summarizeBy: none
+		sourceColumn: MinimumAllowedPrice
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PriceSpread
+		dataType: double
+		lineageTag: fb82e766-8da6-4f89-916c-cef9c097429a
+		sourceLineageTag: PriceSpread
+		summarizeBy: none
+		sourceColumn: PriceSpread
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MaximumDiscountPct
+		dataType: double
+		lineageTag: d47d0a95-9776-433d-afe8-08150e0ce710
+		sourceLineageTag: MaximumDiscountPct
+		summarizeBy: none
+		sourceColumn: MaximumDiscountPct
+
+		changedProperty = SummarizeBy
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SilverLoadedAt
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f1f4b13b-9280-408f-a90c-ca697d743925
+		sourceLineageTag: SilverLoadedAt
+		summarizeBy: none
+		sourceColumn: SilverLoadedAt
+
+		annotation SummarizationSetBy = Automatic
+
+	partition ProductPriceList = entity
+		mode: directLake
+		source
+			entityName: ProductPriceList
+			schemaName: dbo
+			expressionSource: 'DirectLake - AutomotiveParts__WH'
+
