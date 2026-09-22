@@ -20,7 +20,8 @@ CREATE TABLE [dbo].[FactSales] (
     [UnitCost]          DECIMAL (18, 2) NULL,
     [CostAmount]        DECIMAL (18, 2) NULL,
     [GrossMarginAmount] DECIMAL (18, 2) NULL,
-    [GrossMarginPct]    DECIMAL (25, 2) NULL
+    [GrossMarginPct]    DECIMAL (25, 2) NULL,
+    [LastModifiedDate]  DATETIME2 (6)   NULL
 );
 
 

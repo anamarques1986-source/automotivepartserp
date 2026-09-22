@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "PL_Incremental_ERP_Sales"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "69bc7c96-df4c-8ce5-444e-b3759d93d38f"
+  }
+}

@@ -1,0 +1,389 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "DataWarehouseSource",
+            "sqlReaderQuery": "SELECT\n    SourceSystem,\n    SourceSchema,\n    SourceTable,\n    TargetSchema,\n    TargetTable,\n    WatermarkColumn,\n    KeyColumn\nFROM ctl.IngestionConfig\nWHERE IsActive = 1;",
+            "partitionOption": "None",
+            "queryTimeout": "02:00:00"
+          },
+          "datasetSettings": {
+            "type": "DataWarehouseTable",
+            "schema": [],
+            "linkedService": {
+              "name": "AutomotiveParts__WH",
+              "properties": {
+                "type": "DataWarehouse",
+                "typeProperties": {
+                  "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                  "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                  "workspaceId": "00000000-0000-0000-0000-000000000000"
+                },
+                "annotations": []
+              }
+            },
+            "annotations": []
+          },
+          "firstRowOnly": false
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Lookup_IngestionConfig",
+        "dependsOn": []
+      },
+      {
+        "type": "ForEach",
+        "typeProperties": {
+          "items": {
+            "value": "@activity('Lookup_IngestionConfig').output.value",
+            "type": "Expression"
+          },
+          "activities": [
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "DataWarehouseSource",
+                  "sqlReaderQuery": {
+                    "value": "@concat(\n'SELECT LastWatermark\nFROM ctl.watermark\nWHERE SourceSystem = ''',\nitem().SourceSystem,\n'''\nAND SourceTable = ''',\nitem().SourceTable,\n''';'\n)",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00"
+                },
+                "datasetSettings": {
+                  "type": "DataWarehouseTable",
+                  "schema": [],
+                  "linkedService": {
+                    "name": "AutomotiveParts__WH",
+                    "properties": {
+                      "type": "DataWarehouse",
+                      "typeProperties": {
+                        "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                        "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                        "workspaceId": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "annotations": []
+                    }
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Lookup_LastWatermark",
+              "dependsOn": []
+            },
+            {
+              "type": "Lookup",
+              "typeProperties": {
+                "source": {
+                  "type": "SqlServerSource",
+                  "sqlReaderQuery": {
+                    "value": "@concat(\n'SELECT MAX(',\nitem().WatermarkColumn,\n') AS LK_MaxModified\nFROM ',\nitem().SourceSchema,\n'.',\nitem().SourceTable,\n';'\n)",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00"
+                },
+                "datasetSettings": {
+                  "type": "SqlServerTable",
+                  "typeProperties": {
+                    "database": "AutomotivePartsERP"
+                  },
+                  "schema": [],
+                  "externalReferences": {
+                    "connection": "1c1ea986-c256-4255-84c5-9ef4eb1968da"
+                  },
+                  "annotations": []
+                },
+                "firstRowOnly": true
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Lookup_CurrentMaxWatermark_sql",
+              "dependsOn": [
+                {
+                  "activity": "Lookup_LastWatermark",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Copy",
+              "typeProperties": {
+                "source": {
+                  "type": "SqlServerSource",
+                  "sqlReaderQuery": {
+                    "value": "@concat(\n'SELECT * FROM ',\nitem().SourceSchema,\n'.',\nitem().SourceTable,\n' WHERE ',\nitem().WatermarkColumn,\n' > CONVERT(datetime2(6), ''',\nactivity('Lookup_LastWatermark').output.firstRow.LastWatermark,\n''', 126)\nAND ',\nitem().WatermarkColumn,\n' <= CONVERT(datetime2(6), ''',\nactivity('Lookup_CurrentMaxWatermark_sql').output.firstRow.LK_MaxModified,\n''', 126);'\n)",
+                    "type": "Expression"
+                  },
+                  "partitionOption": "None",
+                  "queryTimeout": "02:00:00",
+                  "datasetSettings": {
+                    "type": "SqlServerTable",
+                    "typeProperties": {
+                      "database": "AutomotivePartsERP"
+                    },
+                    "schema": [],
+                    "externalReferences": {
+                      "connection": "1c1ea986-c256-4255-84c5-9ef4eb1968da"
+                    },
+                    "annotations": []
+                  }
+                },
+                "sink": {
+                  "type": "LakehouseTableSink",
+                  "tableActionOption": "OverwriteSchema",
+                  "applyVOrder": false,
+                  "enableTimestampNtz": false,
+                  "partitionOption": "None",
+                  "datasetSettings": {
+                    "type": "LakehouseTable",
+                    "typeProperties": {
+                      "schema": {
+                        "value": "@item().TargetSchema",
+                        "type": "Expression"
+                      },
+                      "table": {
+                        "value": "@item().TargetTable",
+                        "type": "Expression"
+                      }
+                    },
+                    "schema": [],
+                    "linkedService": {
+                      "name": "AutomotiveParts_Bronze_LH",
+                      "properties": {
+                        "type": "Lakehouse",
+                        "typeProperties": {
+                          "artifactId": "3e9f6edb-f813-8922-4d00-22bf74123873",
+                          "workspaceId": "00000000-0000-0000-0000-000000000000",
+                          "rootFolder": "Tables"
+                        },
+                        "annotations": []
+                      }
+                    },
+                    "annotations": []
+                  }
+                },
+                "translator": {
+                  "type": "TabularTranslator",
+                  "typeConversion": true,
+                  "typeConversionSettings": {
+                    "allowDataTruncation": true,
+                    "treatBooleanAsNumber": false
+                  }
+                },
+                "enableStaging": false
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "copy_incremental",
+              "dependsOn": [
+                {
+                  "activity": "Lookup_CurrentMaxWatermark_sql",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "@concat(\n'INSERT INTO audit.IngestionRun\n(\n    RunId,\n    SourceSystem,\n    SourceTable,\n    WatermarkFrom,\n    WatermarkTo,\n    RowsCopied,\n    Status,\n    CompletedAt\n)\nVALUES\n(\n    ''',\npipeline().RunId,\n''',\n    ''',\nitem().SourceSystem,\n''',\n    ''',\nitem().SourceTable,\n''',\n    CONVERT(datetime2(6), ''',\nformatDateTime(\n    activity('Lookup_LastWatermark').output.firstRow['LastWatermark'],\n    'yyyy-MM-ddTHH:mm:ss.ffffff'\n),\n''', 126),\n    CONVERT(datetime2(6), ''',\nformatDateTime(\n    activity('Lookup_CurrentMaxWatermark_sql').output.firstRow['LK_MaxModified'],\n    'yyyy-MM-ddTHH:mm:ss.ffffff'\n),\n''', 126),\n    ',\nstring(activity('copy_incremental').output.rowsRead),\n',\n    ''SUCCESS'',\n    SYSUTCDATETIME()\n);'\n)",
+                      "type": "Expression"
+                    },
+                    "type": "Query"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 0,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Log_IngestionRun",
+              "dependsOn": [
+                {
+                  "activity": "copy_incremental",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "name": "For each_meta",
+        "dependsOn": [
+          {
+            "activity": "Lookup_IngestionConfig",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "d0f354bc-f445-ab84-4bc8-e126f63214a2",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "externalReferences": {
+          "connection": "5e2503a1-2dc7-4ef9-a8e6-995a21950148"
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Notebook1",
+        "dependsOn": [
+          {
+            "activity": "For each_meta",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "IfCondition",
+        "typeProperties": {
+          "expression": {
+            "value": "@equals(\n    string(activity('Notebook1').output.result.exitValue),\n    'PASS'\n)",
+            "type": "Expression"
+          },
+          "ifTrueActivities": [
+            {
+              "type": "ExecutePipeline",
+              "typeProperties": {
+                "pipeline": {
+                  "referenceName": "e72632f4-9d98-a683-4d31-2fa16f920114",
+                  "type": "PipelineReference"
+                },
+                "parameters": {},
+                "waitOnCompletion": true
+              },
+              "policy": {
+                "secureInput": false
+              },
+              "name": "Invoke pipeline1",
+              "dependsOn": []
+            },
+            {
+              "type": "Script",
+              "typeProperties": {
+                "scripts": [
+                  {
+                    "text": {
+                      "value": "UPDATE w\nSET\n    w.LastWatermark = a.WatermarkTo,\n    w.LastRunStatus = 'SUCCESS',\n    w.LastRunAt = a.CompletedAt\nFROM ctl.watermark w\nINNER JOIN audit.IngestionRun a\n    ON w.SourceSystem = a.SourceSystem\n   AND w.SourceTable = a.SourceTable\nWHERE a.RunId = '@{pipeline().RunId}'\n  AND a.Status = 'SUCCESS';",
+                      "type": "Expression"
+                    },
+                    "type": "Query"
+                  }
+                ],
+                "scriptBlockExecutionTimeout": "02:00:00"
+              },
+              "linkedService": {
+                "name": "AutomotiveParts__WH",
+                "properties": {
+                  "type": "DataWarehouse",
+                  "typeProperties": {
+                    "artifactId": "9ba44aba-3f1e-bf45-4f79-875bd0aae62d",
+                    "endpoint": "xcldsjapfdvejpagbgvpgti7ma-h4vuadyrjcledfd5foyhrsgp7y.datawarehouse.fabric.microsoft.com",
+                    "workspaceId": "00000000-0000-0000-0000-000000000000"
+                  },
+                  "annotations": []
+                }
+              },
+              "policy": {
+                "timeout": "0.12:00:00",
+                "retry": 3,
+                "retryIntervalInSeconds": 30,
+                "secureInput": false,
+                "secureOutput": false
+              },
+              "name": "Commit_Watermarks",
+              "dependsOn": [
+                {
+                  "activity": "Invoke pipeline1",
+                  "dependencyConditions": [
+                    "Succeeded"
+                  ]
+                }
+              ]
+            }
+          ],
+          "ifFalseActivities": [
+            {
+              "type": "Fail",
+              "typeProperties": {
+                "message": "Data Quality checks failed. Processing stopped before Gold.",
+                "errorCode": "1001"
+              },
+              "name": "Fail1",
+              "dependsOn": []
+            }
+          ]
+        },
+        "name": "If Condition1",
+        "dependsOn": [
+          {
+            "activity": "Notebook1",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
