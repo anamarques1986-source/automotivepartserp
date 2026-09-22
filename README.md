@@ -578,3 +578,36 @@ Production Deployment
 The project showcases practical skills across:
 
 **Microsoft Fabric · Data Engineering · Analytics Engineering · PySpark · SQL · Direct Lake · Power BI · Git · CI/CD**
+
+## V2 – Production-Ready Data Engineering
+
+V2 evolves the original platform with production-oriented ingestion, observability and data quality controls.
+
+### Key improvements
+
+- Metadata-driven incremental ingestion
+- Watermark-based change detection
+- Parallel entity processing
+- UTC-based modification tracking
+- Audit logging per pipeline run
+- Centralized watermark commit
+- PySpark Data Quality framework
+- Business-aware validation rules
+- PASS / FAIL Data Quality Gate
+- Automatic blocking of invalid data before Gold processing
+
+### Incremental Pipeline
+
+![V2 Incremental Pipeline](Docs/v2-incremental-pipeline.png)
+
+### Audit & Watermark Tracking
+
+![Audit and Watermark](Docs/v2-audit-watermark.png)
+
+### Data Quality Gate – Failure
+
+![Data Quality Failure](Docs/v2-data-quality-fail.png)
+
+### Data Quality Gate – Success
+
+![Data Quality Success](Docs/v2-data-quality-pass.png)
