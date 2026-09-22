@@ -12,8 +12,6 @@ This project demonstrates a complete analytics workflow using Microsoft Fabric, 
 
 ## Architecture
 
-![Automotive Parts ERP Architecture](docs/architecture.png)
-
 ### End-to-End Data Flow
 
 ```text
@@ -40,7 +38,7 @@ Direct Lake Semantic Model
 Power BI
 ```
 
-The platform follows a Medallion-style architecture:
+The core analytical platform follows a Medallion-style architecture:
 
 **SQL Server → Bronze → Silver → Gold / Warehouse → Direct Lake → Power BI**
 
@@ -50,7 +48,7 @@ The platform follows a Medallion-style architecture:
 
 The project simulates the analytics modernization of an automotive-parts company operating a traditional ERP environment.
 
-The synthetic ERP dataset contains business entities related to:
+The business scenario was designed around typical ERP processes such as:
 
 - Customers
 - Products
@@ -63,15 +61,17 @@ The synthetic ERP dataset contains business entities related to:
 - Accounts receivable
 - Accounts payable
 
-The objective is to transform operational ERP data into a modern cloud analytics platform using Microsoft Fabric.
+The objective is to transform operational ERP data into a modern, governed and scalable analytical platform using Microsoft Fabric.
 
 ---
+
+# Data Platform
 
 ## Bronze Layer
 
 The Bronze layer represents the raw ingestion area of the platform.
 
-Operational ERP data is ingested into a Microsoft Fabric Lakehouse with minimal transformation, preserving the original source structure as much as possible.
+Operational ERP data is ingested from SQL Server into a Microsoft Fabric Lakehouse while preserving the source structure as much as possible.
 
 ### Technologies
 
@@ -79,6 +79,7 @@ Operational ERP data is ingested into a Microsoft Fabric Lakehouse with minimal 
 - Microsoft OneLake
 - Fabric Lakehouse
 - Delta tables
+- On-premises Data Gateway
 
 ### Purpose
 
@@ -86,16 +87,17 @@ The Bronze layer provides:
 
 - Raw source preservation
 - Centralized ingestion
-- Separation between source systems and transformation logic
+- Source-system isolation
+- Traceability
 - A reliable starting point for downstream processing
 
 ---
 
 ## Silver Layer
 
-The Silver layer contains cleaned, standardized, and business-ready intermediate datasets.
+The Silver layer contains cleaned, standardized and business-ready intermediate datasets.
 
-PySpark notebooks transform the Bronze data before it is consumed by the analytical Warehouse layer.
+PySpark notebooks transform Bronze data before it is consumed by the analytical Warehouse.
 
 ### Main Notebooks
 
@@ -106,13 +108,13 @@ NB02_Silver_Commercial
 
 ### Typical Transformations
 
-- Data type standardization
+- Data-type standardization
 - Column normalization
 - Data cleansing
 - Deduplication
 - Business-rule application
 - Schema normalization
-- Validation of key fields
+- Key-field validation
 - Preparation of analytical entities
 
 Silver data is stored as Delta tables in the Fabric Lakehouse.
@@ -123,9 +125,7 @@ Silver data is stored as Delta tables in the Fabric Lakehouse.
 
 The Gold layer is implemented in **Microsoft Fabric Warehouse**.
 
-It contains the curated, dimensional, and analytics-ready data model used by the Power BI Semantic Model.
-
-Data from the Silver layer is first loaded into staging tables and then transformed into final dimension, fact, and supporting tables.
+It contains the curated dimensional model consumed by the Direct Lake Semantic Model.
 
 ### Gold Processing Flow
 
@@ -141,27 +141,25 @@ Gold / dbo
 Direct Lake Semantic Model
 ```
 
-The permanent pipeline responsible for the Silver-to-Gold process is:
+The permanent Silver-to-Gold pipeline is:
 
 ```text
 PL_Silver_To_Gold
 ```
 
-### Purpose of the Gold Layer
-
 The Gold layer provides:
 
 - Business-ready analytical data
-- Dimensional modelling
 - Stable reporting structures
-- Reusable facts and dimensions
-- A performant source for the Power BI Semantic Model
+- Reusable dimensions and facts
+- Dimensional modelling
+- A performant analytical source for Power BI
 
 ---
 
-## Dimensional Model
+# Dimensional Model
 
-The Fabric Warehouse contains a star-schema-oriented analytical model.
+The Fabric Warehouse implements a star-schema-oriented analytical model.
 
 ### Dimensions
 
@@ -189,24 +187,47 @@ ProductSupplier
 ProductPriceList
 ```
 
-The dimensional design separates descriptive business entities from transactional data and supports efficient analytical reporting.
+The dimensional design separates descriptive business entities from transactional data and provides a reusable analytical structure.
 
 ---
 
-## Semantic Model
+# Power BI Report
 
-The analytical Warehouse is consumed through a Power BI Semantic Model using **Direct Lake**.
+The final analytical experience is delivered through Power BI using the Direct Lake Semantic Model.
 
-Direct Lake allows the semantic layer to access data stored in OneLake without relying on a traditional imported Power BI dataset.
+### Executive Overview
 
-The Semantic Model contains:
+![Power BI Executive Overview](Docs/report-overview.png)
 
-- Table relationships
-- Business measures
-- DAX calculations
-- Date intelligence
+The report supports analysis across multiple business areas, including:
+
+- Revenue and margin
+- Sales trends
+- Product performance
+- Customer analysis
+- Supplier analysis
+- Warehouse performance
+- Accounts receivable
+- Accounts payable
+
+---
+
+# Semantic Model
+
+The analytical Warehouse is consumed through a **Direct Lake Semantic Model**.
+
+Direct Lake allows the semantic layer to query data stored in OneLake without using a traditional imported Power BI dataset.
+
+![Direct Lake Semantic Model](Docs/semantic-model.png)
+
+The model includes:
+
+- Fact and dimension relationships
+- DAX measures
+- Time intelligence
 - KPIs
-- Reporting logic
+- Business calculations
+- Shared analytical logic
 
 ### Example Measures
 
@@ -223,32 +244,13 @@ Online Revenue %
 Active Customers
 ```
 
-The model provides a reusable semantic layer between the physical Warehouse and Power BI reporting.
-
 ---
 
-## Power BI
+# CI/CD and Deployment
 
-The final analytical experience is delivered through Power BI.
+The solution uses separate environments for development, testing and production.
 
-The report is connected to the Direct Lake Semantic Model and supports analysis across multiple business areas.
-
-Examples include:
-
-- Revenue performance
-- Sales trends
-- Product performance
-- Customer analysis
-- Supplier analysis
-- Warehouse performance
-- Accounts receivable
-- Accounts payable
-
----
-
-## CI/CD Architecture
-
-The project includes separate environments for development, testing, and production.
+![DEV TEST PROD Deployment Pipeline](Docs/deployment-pipeline.png)
 
 ```text
 GitHub
@@ -260,7 +262,7 @@ Test
 Production
 ```
 
-### Environments
+### Fabric Workspaces
 
 ```text
 AutomotiveParts_DEV
@@ -268,7 +270,7 @@ AutomotiveParts_TEST
 AutomotiveParts_PROD
 ```
 
-Microsoft Fabric Deployment Pipelines are used to promote artifacts between environments:
+Microsoft Fabric Deployment Pipelines are used to promote artifacts across environments:
 
 ```text
 DEV → TEST → PROD
@@ -286,35 +288,29 @@ This provides:
 
 ## Git Source Control
 
-GitHub is used as the source-control system for the project.
+GitHub is used as the source-control system.
 
-The **Development workspace** is connected to Git.
-
-TEST and PROD are not maintained as duplicate folders in the repository. Instead, artifacts are promoted using Fabric Deployment Pipelines.
-
-### Source-Control Flow
+The **Development workspace** is connected to Git, while TEST and PROD are populated through Fabric Deployment Pipelines rather than maintained as duplicate Git folders.
 
 ```text
 GitHub
    ↕
 DEV Workspace
    ↓
-Deployment Pipeline
+Fabric Deployment Pipeline
    ↓
 TEST
    ↓
 PROD
 ```
 
-This keeps Git focused on development while Fabric Deployment Pipelines manage environment promotion.
+This keeps source control focused on development while Fabric manages environment promotion.
 
 ---
 
 ## Environment-Specific Direct Lake Connections
 
-Each environment contains its own Fabric Warehouse and Semantic Model.
-
-The Semantic Model in each environment is configured to access the Warehouse belonging to that same environment.
+Each environment contains its own Warehouse and Semantic Model.
 
 ```text
 DEV Semantic Model  → DEV Warehouse
@@ -326,7 +322,287 @@ This prevents TEST or PROD reports from accidentally querying data from another 
 
 ---
 
-## Repository Structure
+# V2 — Production-Oriented Data Engineering
+
+V2 evolves the original end-to-end platform with production-oriented ingestion, observability and automated data-quality controls.
+
+The objective was to move beyond full-load pipelines and introduce reusable engineering patterns for incremental processing and operational control.
+
+---
+
+## Metadata-Driven Incremental Ingestion
+
+The V2 ingestion framework is controlled through metadata rather than creating a separate hardcoded pipeline for every source table.
+
+The main pipeline is:
+
+```text
+PL_Incremental_ERP_Sales
+```
+
+![V2 Incremental Pipeline](Docs/v2-incremental-pipeline.png)
+
+### Processing Pattern
+
+```text
+Lookup_IngestionConfig
+        ↓
+Parallel ForEach
+        ↓
+┌─────────────────────────────────┐
+│ Read previous watermark         │
+│ Read current source watermark   │
+│ Copy incremental rows           │
+│ Log ingestion execution         │
+└─────────────────────────────────┘
+        ↓
+Data Quality Validation
+        ↓
+PASS / FAIL Gate
+```
+
+The metadata configuration defines which entities are processed and how they are processed.
+
+Example configuration fields include:
+
+```text
+SourceSystem
+SourceSchema
+SourceTable
+TargetSchema
+TargetTable
+WatermarkColumn
+KeyColumn
+IsActive
+```
+
+Adding another supported table can therefore be driven primarily through configuration instead of duplicating pipeline logic.
+
+---
+
+## Watermark-Based Change Detection
+
+Incremental processing uses a `LastModifiedDate` watermark stored in UTC.
+
+For each source entity, the pipeline processes only records satisfying:
+
+```text
+LastWatermark < LastModifiedDate <= CurrentMaxWatermark
+```
+
+This creates a controlled processing window.
+
+The framework therefore avoids unnecessary full-table reloads and processes only new or modified records.
+
+### Watermark Control
+
+Watermarks are stored in:
+
+```text
+ctl.Watermark
+```
+
+Ingestion metadata is stored in:
+
+```text
+ctl.IngestionConfig
+```
+
+This separates runtime state from pipeline implementation.
+
+---
+
+## Parallel Entity Processing
+
+Active source entities are processed through a metadata-driven `ForEach`.
+
+For example:
+
+```text
+SalesDocumentHeader
+SalesDocumentLine
+```
+
+can be processed by the same reusable pipeline.
+
+The ingestion activities run independently, while watermark commits are centralized to avoid concurrent update conflicts in the Warehouse control tables.
+
+---
+
+## Audit Logging
+
+Each entity execution is recorded in:
+
+```text
+audit.IngestionRun
+```
+
+![Audit and Watermark Tracking](Docs/v2-audit-watermark.png)
+
+Audit information includes:
+
+```text
+RunId
+SourceSystem
+SourceTable
+WatermarkFrom
+WatermarkTo
+RowsCopied
+Status
+CompletedAt
+```
+
+This provides operational traceability and makes it possible to answer questions such as:
+
+- Which entity ran?
+- When did it run?
+- How many rows changed?
+- Which watermark interval was processed?
+- Did the ingestion succeed?
+
+---
+
+# Data Quality Framework
+
+V2 introduces a PySpark Data Quality framework implemented in:
+
+```text
+NB03_Data_Quality
+```
+
+The notebook validates the current incremental batch before data is allowed to continue to the Gold analytical layer.
+
+### Example Technical Checks
+
+- Null business keys
+- Duplicate keys
+- Missing document references
+- Invalid prices
+- Invalid quantities
+- Referential-integrity checks
+
+### Business-Aware Validation
+
+The framework also applies business-specific rules rather than treating every negative value as invalid.
+
+For example, sales-document quantities follow the document type:
+
+```text
+INV / DBN → Quantity must be positive
+CRN       → Quantity must be negative
+Quantity 0 → Invalid
+```
+
+This distinguishes valid credit-note behaviour from genuine data-quality issues.
+
+---
+
+## PASS / FAIL / SKIP Logic
+
+Data Quality rules support three outcomes:
+
+```text
+PASS → rows were checked and the rule succeeded
+FAIL → rows were checked and invalid data was detected
+SKIP → no incremental rows were available for that rule
+```
+
+The notebook aggregates individual rule results into a global quality status.
+
+```text
+Any FAIL
+   ↓
+Global DQ Status = FAIL
+
+No FAIL
+   ↓
+Global DQ Status = PASS
+```
+
+The final status is returned to the Fabric pipeline through the notebook exit value.
+
+---
+
+## Data Quality Gate
+
+The pipeline contains an automated quality gate before Gold processing.
+
+```text
+Incremental Ingestion
+        ↓
+NB03_Data_Quality
+        ↓
+IF_DQ_Pass
+      /        \
+   PASS        FAIL
+    ↓            ↓
+Silver/Gold   DQ_FAILED
+```
+
+### Failure Scenario
+
+Invalid data is automatically prevented from reaching the Gold analytical layer.
+
+![Data Quality Gate Failure](Docs/v2-data-quality-fail.png)
+
+The pipeline intentionally terminates with a controlled error when critical quality rules fail.
+
+Example:
+
+```text
+Error code: DQ_FAILED
+
+Data Quality checks failed.
+Processing stopped before Gold.
+```
+
+### Successful Scenario
+
+When all critical rules pass, processing continues to the Silver-to-Gold pipeline.
+
+![Data Quality Gate Success](Docs/v2-data-quality-pass.png)
+
+This means Gold processing is dependent on successful validation rather than being executed unconditionally.
+
+---
+
+## Safe Watermark Commit
+
+Watermarks are committed only after the required processing path succeeds.
+
+This avoids advancing the source checkpoint when invalid data has been detected.
+
+Conceptually:
+
+```text
+Copy incremental batch
+        ↓
+Audit
+        ↓
+Data Quality
+        ↓
+PASS
+        ↓
+Silver / Gold
+        ↓
+Commit Watermark
+```
+
+If Data Quality fails:
+
+```text
+Data Quality = FAIL
+        ↓
+Gold blocked
+        ↓
+Watermark not committed
+```
+
+This protects against silently skipping rejected data in future incremental executions.
+
+---
+
+# Repository Structure
 
 ```text
 automotivepartserp/
@@ -338,10 +614,19 @@ automotivepartserp/
 │   ├── AutomotiveParts__WH.Warehouse/
 │   ├── NB01_Silver_Sales.Notebook/
 │   ├── NB02_Silver_Commercial.Notebook/
+│   ├── NB03_Data_Quality.Notebook/
+│   ├── PL_Incremental_ERP_Sales.DataPipeline/
 │   └── PL_Silver_To_Gold.DataPipeline/
 │
-├── docs/
-│   └── architecture.png
+├── Docs/
+│   ├── architecture.png
+│   ├── deployment-pipeline.png
+│   ├── semantic-model.png
+│   ├── report-overview.png
+│   ├── v2-incremental-pipeline.png
+│   ├── v2-audit-watermark.png
+│   ├── v2-data-quality-fail.png
+│   └── v2-data-quality-pass.png
 │
 ├── LICENSE
 └── README.md
@@ -349,18 +634,22 @@ automotivepartserp/
 
 ---
 
-## Technology Stack
+# Technology Stack
 
 | Area | Technology |
 |---|---|
-| Source | Synthetic SQL Server ERP |
+| Operational Source | SQL Server |
+| On-Premises Connectivity | On-premises Data Gateway |
 | Data Integration | Microsoft Fabric Data Factory |
 | Data Lake | Microsoft OneLake |
 | Bronze Layer | Fabric Lakehouse |
 | Silver Layer | Delta Lake + PySpark |
-| Transformation | PySpark / T-SQL |
+| Data Transformation | PySpark / T-SQL |
+| Incremental Processing | Metadata-driven pipelines + Watermarks |
+| Operational Metadata | Fabric Warehouse |
+| Audit | Warehouse audit schema |
+| Data Quality | PySpark |
 | Gold Layer | Microsoft Fabric Warehouse |
-| Staging | Warehouse STG schema |
 | Analytical Model | Star Schema |
 | Semantic Layer | Power BI Semantic Model |
 | Connectivity | Direct Lake |
@@ -371,19 +660,18 @@ automotivepartserp/
 
 ---
 
-## Key Concepts Demonstrated
+# Key Engineering Concepts Demonstrated
 
-The project demonstrates practical implementation of:
+This project demonstrates practical implementation of:
 
 - End-to-end Microsoft Fabric architecture
 - Medallion architecture
 - Lakehouse architecture
 - Delta Lake
 - PySpark transformations
-- Microsoft Fabric Warehouse
-- Staging-to-Gold processing
+- Fabric Warehouse
 - Dimensional modelling
-- Star schema design
+- Star-schema design
 - T-SQL
 - DAX
 - Direct Lake
@@ -391,58 +679,37 @@ The project demonstrates practical implementation of:
 - Power BI reporting
 - Git source control
 - CI/CD
+- DEV / TEST / PROD
 - Deployment Pipelines
-- DEV / TEST / PROD separation
 - Environment-specific data connections
+- Incremental ingestion
+- Watermark-based processing
+- Metadata-driven pipelines
+- Parallel entity processing
+- UTC timestamp standardization
+- Operational audit logging
+- Centralized watermark management
+- Data Quality validation
+- Business-aware validation rules
+- Automated PASS / FAIL gates
+- Failure handling before Gold processing
 
 ---
 
-## Data Flow Summary
+# Current Project Status
 
-### 1. Source
-
-Synthetic ERP data represents a traditional SQL Server operational system.
-
-### 2. Bronze
-
-Raw source data is ingested into the Fabric Lakehouse.
-
-### 3. Silver
-
-PySpark notebooks cleanse, standardize, and prepare the data.
-
-### 4. Staging
-
-Silver datasets are transferred into Warehouse staging structures.
-
-### 5. Gold
-
-T-SQL transformations create business-ready facts, dimensions, and supporting tables.
-
-### 6. Semantic Layer
-
-A Direct Lake Semantic Model provides relationships, measures, and analytical logic.
-
-### 7. Reporting
-
-Power BI delivers the final analytical experience.
-
----
-
-## Current Project Status
-
-### Completed
+## V1 — Completed
 
 - [x] Synthetic ERP dataset
+- [x] SQL Server source
 - [x] Fabric Lakehouse
-- [x] Bronze ingestion layer
+- [x] Bronze ingestion
 - [x] PySpark Silver transformations
 - [x] Delta tables
 - [x] Fabric Warehouse
-- [x] Staging layer
+- [x] STG layer
 - [x] Gold dimensional model
-- [x] Dimension tables
-- [x] Fact tables
+- [x] Fact and dimension tables
 - [x] T-SQL transformations
 - [x] Direct Lake Semantic Model
 - [x] DAX business measures
@@ -454,160 +721,126 @@ Power BI delivers the final analytical experience.
 - [x] Fabric Deployment Pipeline
 - [x] Environment-specific Direct Lake connections
 
+## V2 — Completed
+
+- [x] Metadata-driven incremental ingestion
+- [x] Watermark-based change detection
+- [x] UTC modification tracking
+- [x] Parallel entity processing
+- [x] Reusable ingestion configuration
+- [x] Audit logging
+- [x] Centralized watermark commit
+- [x] PySpark Data Quality framework
+- [x] Business-aware validation
+- [x] PASS / FAIL / SKIP rule handling
+- [x] Automated Data Quality Gate
+- [x] Gold processing blocked on quality failure
+- [x] Successful and failure-path testing
+
 ---
 
-## Roadmap
+# Roadmap
 
-Planned improvements include:
+Future iterations may extend the platform with:
 
-- [ ] Data quality framework
-- [ ] Incremental loading
-- [ ] Watermark-based processing
-- [ ] Audit logging
-- [ ] Pipeline monitoring
-- [ ] Automated validation tests
-- [ ] Improved observability
-- [ ] Extended technical documentation
+- [ ] Slowly Changing Dimensions — SCD Type 2
+- [ ] Delete detection / CDC
+- [ ] Advanced error-handling and replay
+- [ ] Automated monitoring and alerting
+- [ ] Data-platform health dashboard
+- [ ] Advanced observability
+- [ ] Security and governance enhancements
+- [ ] Eventstream
+- [ ] Eventhouse
+- [ ] KQL
+- [ ] Real-Time Intelligence use case
 
----
-
-## Planned Data Quality Framework
-
-A future data-quality notebook can validate conditions such as:
+A future real-time extension could complement the historical analytical platform with operational events such as:
 
 ```text
-Duplicate business keys
-Null primary keys
-Orphan foreign keys
-Invalid dates
-Negative quantities
-Missing product references
-Missing customer references
-Unexpected row-count variations
+OrderCreated
+OrderCancelled
+PaymentReceived
+StockMovement
+ProductPriceChanged
 ```
 
-The objective is to detect data issues before data reaches the Gold analytical layer.
-
----
-
-## Planned Incremental Processing
-
-A future version of the project can introduce watermark-based incremental loading.
-
-Example:
+using:
 
 ```text
-LastModifiedDate
-        ↓
-Read previous watermark
-        ↓
-Process only new / changed rows
-        ↓
-Write Delta changes
-        ↓
-Update watermark
+Eventstream
+      ↓
+Eventhouse
+      ↓
+KQL
+      ↓
+Real-Time Analytics
 ```
-
-This would reduce unnecessary full-load processing and better simulate a production data-engineering workload.
 
 ---
 
-## Planned Audit and Observability
+# Data Privacy
 
-An audit structure can be introduced to capture operational metadata such as:
-
-```text
-RunId
-ProcessName
-Environment
-StartTime
-EndTime
-RowsRead
-RowsWritten
-Status
-ErrorMessage
-```
-
-This would improve troubleshooting, monitoring, and operational visibility.
-
----
-
-## Data Privacy
-
-No real ERP, customer, supplier, or financial data is included in this repository.
+No real customer, supplier, ERP or financial data is included in this repository.
 
 All data used in the project is synthetic.
 
-The project was created solely for:
+The project was created for:
 
-- Learning
-- Technical experimentation
-- Microsoft Fabric practice
-- Data Engineering demonstration
+- Technical learning
+- Microsoft Fabric experimentation
+- Data Engineering practice
 - Power BI demonstration
+- Architecture practice
 - Portfolio presentation
 
 ---
 
-## Project Purpose
+# Project Purpose
 
-This project demonstrates the design and implementation of a complete analytics platform rather than an isolated dashboard.
+This project demonstrates the design and implementation of a complete analytical data platform rather than an isolated dashboard.
 
-It covers the full lifecycle:
+It covers the lifecycle from an operational source through engineering, modelling, analytics and controlled deployment:
 
 ```text
-Source
-  ↓
-Data Ingestion
-  ↓
-Data Engineering
-  ↓
-Data Transformation
-  ↓
-Dimensional Modelling
-  ↓
-Semantic Modelling
-  ↓
-Business Intelligence
-  ↓
-CI/CD
-  ↓
-Production Deployment
+Operational Source
+        ↓
+Incremental Ingestion
+        ↓
+Bronze
+        ↓
+Silver
+        ↓
+Data Quality
+        ↓
+Gold Warehouse
+        ↓
+Direct Lake
+        ↓
+Power BI
+        ↓
+Git / CI-CD
+        ↓
+DEV / TEST / PROD
 ```
 
 The project showcases practical skills across:
 
-**Microsoft Fabric · Data Engineering · Analytics Engineering · PySpark · SQL · Direct Lake · Power BI · Git · CI/CD**
+**Microsoft Fabric · Data Engineering · Analytics Engineering · PySpark · SQL · T-SQL · DAX · Direct Lake · Power BI · Git · CI/CD · Incremental Processing · Data Quality · Audit & Observability**
 
-## V2 – Production-Ready Data Engineering
+---
 
-V2 evolves the original platform with production-oriented ingestion, observability and data quality controls.
+## Versions
 
-### Key improvements
+### V1
 
-- Metadata-driven incremental ingestion
-- Watermark-based change detection
-- Parallel entity processing
-- UTC-based modification tracking
-- Audit logging per pipeline run
-- Centralized watermark commit
-- PySpark Data Quality framework
-- Business-aware validation rules
-- PASS / FAIL Data Quality Gate
-- Automatic blocking of invalid data before Gold processing
+End-to-end Microsoft Fabric analytics platform with Medallion architecture, Warehouse, Direct Lake, Power BI, Git and DEV / TEST / PROD deployment.
 
-### Incremental Pipeline
+### V2
 
-![V2 Incremental Pipeline](Docs/v2-incremental-pipeline.png)
+Production-oriented evolution introducing metadata-driven incremental ingestion, watermarking, audit logging and an automated Data Quality Gate before Gold processing.
 
-### Audit & Watermark Tracking
+---
 
-![Audit and Watermark](Docs/v2-audit-watermark.png)
-
-### Data Quality Gate – Failure
-
-![Data Quality Failure](Docs/v2-data-quality-fail.png)
-
-### Data Quality Gate – Success
-
-![Data Quality Success](Docs/v2-data-quality-pass.png)
+## Author
+Portfolio project developed as part of an ongoing specialization in **Microsoft Fabric, Power BI and Data Engineering**.
