@@ -199,6 +199,12 @@ The final analytical experience is delivered through Power BI using the Direct L
 
 ![Power BI Executive Overview](Docs/report-overview.png)
 
+![Power BI Executive Overview](Docs/report-sales.png)
+
+![Power BI Executive Overview](Docs/report-finance.png)
+
+![Power BI Executive Overview](Docs/report-finance-sup.png)
+
 The report supports analysis across multiple business areas, including:
 
 - Revenue and margin
