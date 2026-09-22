@@ -199,9 +199,15 @@ The final analytical experience is delivered through Power BI using the Direct L
 
 ![Power BI Executive Overview](Docs/report-overview.png)
 
+### Sales & Margins
+
 ![Power BI Executive Overview](Docs/report-sales.png)
 
+### Customers & Credit Risk
+
 ![Power BI Executive Overview](Docs/report-finance.png)
+
+### Suppliers & Payables
 
 ![Power BI Executive Overview](Docs/report-finance-sup.png)
 
